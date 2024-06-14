@@ -1,11 +1,9 @@
-
-keras==2.15.0
+keras
 pandas
 numpy
 sklearn
 scikit-learn
-streamlit==1.32.0
-tensorflow==2.15.0
+tensorflow
 
 
 
