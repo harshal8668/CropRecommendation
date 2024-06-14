@@ -12,6 +12,13 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 import pickle
 
+
+# Load data
+file = pd.read_csv("Dataset/Crop_recommendation_new1.csv")
+
+file = file.rename(columns={'label': 'crop'})
+file.dropna(subset=['N'], inplace=True)
+
 crop_dict = {
     'rice': 1,
     'maize': 2,
@@ -37,6 +44,33 @@ crop_dict = {
     'coffee': 22
 }
 
+file['crop_num'] = file['crop'].map(crop_dict)
+file['land_type_num'] = file['land_type'].map({"Hilly": 0, "plain": 1})
+
+x = file.drop(columns=['crop', 'crop_num', 'land_type', 'land_type_num'], axis=1)
+y = file['crop_num']
+
+# Split data
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=69)
+
+# Scale data
+ms = MinMaxScaler()
+x_train = ms.fit_transform(x_train)
+x_test = ms.transform(x_test)
+
+sc = StandardScaler()
+sc.fit(x_train)
+x_train = sc.transform(x_train)
+x_test = sc.transform(x_test)
+
+# Train RandomForestClassifier
+rfc = RandomForestClassifier()
+rfc.fit(x_train, y_train)
+
+# Save models
+pickle.dump(rfc, open('model.pkl', 'wb'))
+pickle.dump(ms, open('minmaxscaler.pkl', 'wb'))
+pickle.dump(sc, open('standscaler.pkl', 'wb'))
 # Load models
 rfc = pickle.load(open('model.pkl', 'rb'))
 ms = pickle.load(open('minmaxscaler.pkl', 'rb'))
