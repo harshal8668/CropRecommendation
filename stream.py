@@ -14,7 +14,7 @@ import pickle
 
 
 # Load data
-file = pd.read_csv("Dataset/Crop_recommendation_new1.csv")
+file = pd.read_csv("CropRecommendation.csv")
 
 file = file.rename(columns={'label': 'crop'})
 file.dropna(subset=['N'], inplace=True)
